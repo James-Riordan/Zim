@@ -1,4 +1,5 @@
 const std = @import("std");
+// const vkgen = @import("./deps/vulkan-zig/generator/index.zig");
 
 // Although this function looks imperative, note that its job is to
 // declaratively construct a build graph that will be executed by an external
@@ -15,6 +16,8 @@ pub fn build(b: *std.Build) void {
     // set a preferred release mode, allowing the user to decide how to optimize.
     const optimize = b.standardOptimizeOption(.{});
 
+    // const vk = vkgen.VkGenerateStep.create(b, try b.build_root.join(b.allocator, &.{ "deps/vk.xml" })).getModule();
+
     const exe = b.addExecutable(.{
         .name = "zim",
         .root_source_file = .{ .path = "src/main.zig" },
@@ -22,34 +25,40 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    // Use mach-glfw.
-    const mach_glfw_dep = b.dependency("mach-glfw", .{
-        .target = target,
-        .optimize = optimize,
+    const vkzig_dep = b.dependency("vulkan_zig", .{
+        .registry = @as([]const u8, b.pathFromRoot("vk.xml")),
     });
-    exe.root_module.addImport("mach-glfw", mach_glfw_dep.module("mach-glfw"));
+    const vkzig_bindings = vkzig_dep.module("vulkan-zig");
+    exe.root_module.addImport("vulkan-zig", vkzig_bindings);
 
-    // Use pre-generated Vulkan bindings.
-    const vulkan_dep = b.dependency("vulkan-zig-generated", .{});
-    exe.root_module.addImport("vulkan", vulkan_dep.module("vulkan-zig-generated"));
+    // const vkzig_dep = b.dependency("vulkan_zig", .{
+    //     .registry = @as([]const u8, b.pathFromRoot("vk.xml")),
+    // });
+    // exe.root_module.addImport("vulkan-zig", vkzig_dep.module("vulkan-zig"));
 
-    // Compile the vertex shader at build time so that it can be imported with '@embedFile'.
-    const compile_vert_shader = b.addSystemCommand(&.{"glslc"});
-    compile_vert_shader.addFileArg(.{ .path = "shaders/triangle.vert" });
-    compile_vert_shader.addArgs(&.{ "--target-env=vulkan1.1", "-o" });
-    const triangle_vert_spv = compile_vert_shader.addOutputFileArg("triangle_vert.spv");
-    exe.root_module.addAnonymousImport("triangle_vert", .{
-        .root_source_file = triangle_vert_spv,
-    });
+    // const mach_glfw_dep = b.dependency("mach-glfw", .{
+    //     .target = target,
+    //     .optimize = optimize,
+    // });
+    // exe.root_module.addImport("mach-glfw", mach_glfw_dep.module("mach-glfw"));
 
-    // Ditto for the fragment shader.
-    const compile_frag_shader = b.addSystemCommand(&.{"glslc"});
-    compile_frag_shader.addFileArg(.{ .path = "shaders/triangle.frag" });
-    compile_frag_shader.addArgs(&.{ "--target-env=vulkan1.1", "-o" });
-    const triangle_frag_spv = compile_frag_shader.addOutputFileArg("triangle_frag.spv");
-    exe.root_module.addAnonymousImport("triangle_frag", .{
-        .root_source_file = triangle_frag_spv,
-    });
+    // // Compile the vertex shader at build time so that it can be imported with '@embedFile'.
+    // const compile_vert_shader = b.addSystemCommand(&.{"glslc"});
+    // compile_vert_shader.addFileArg(.{ .path = "shaders/triangle.vert" });
+    // compile_vert_shader.addArgs(&.{ "--target-env=vulkan1.1", "-o" });
+    // const triangle_vert_spv = compile_vert_shader.addOutputFileArg("triangle_vert.spv");
+    // exe.root_module.addAnonymousImport("triangle_vert", .{
+    //     .root_source_file = triangle_vert_spv,
+    // });
+
+    // // Ditto for the fragment shader.
+    // const compile_frag_shader = b.addSystemCommand(&.{"glslc"});
+    // compile_frag_shader.addFileArg(.{ .path = "shaders/triangle.frag" });
+    // compile_frag_shader.addArgs(&.{ "--target-env=vulkan1.1", "-o" });
+    // const triangle_frag_spv = compile_frag_shader.addOutputFileArg("triangle_frag.spv");
+    // exe.root_module.addAnonymousImport("triangle_frag", .{
+    //     .root_source_file = triangle_frag_spv,
+    // });
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default

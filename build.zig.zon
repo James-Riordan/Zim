@@ -9,14 +9,18 @@
         //     .url = "https://pkg.machengine.org/mach/279290bbf2f1adab0af00323280a07d6bfff47a5.tar.gz",
         //     .hash = "1220ba5472217ef81455b19d540967049bbfaf768b30d04534865707e907ee1c4aec",
         // },
-        .@"mach-glfw" = .{
-            .url = "https://pkg.machengine.org/mach-glfw/1a9a03399058fd83f7fbb597f3f8304007ff6a3c.tar.gz",
-            .hash = "1220b4d58ec6cf53abfd8d7547d39afb9bffa41822d4d58f52625230466e51cc93bb",
+        // .@"mach-glfw" = .{
+        //     .url = "https://pkg.machengine.org/mach-glfw/1a9a03399058fd83f7fbb597f3f8304007ff6a3c.tar.gz",
+        //     .hash = "1220b4d58ec6cf53abfd8d7547d39afb9bffa41822d4d58f52625230466e51cc93bb",
+        // },
+        .vulkan_zig = .{
+            .url = "https://github.com/Snektron/vulkan-zig/archive/839191168399ff38ad115fbec57b74e1406f14a9.tar.gz",
+            .hash = "12203dd92af51de24d95545584c376f2d76698ff0b73d5e5b1cf0e1e12bba2ca4d48",
         },
-        .@"vulkan-zig-generated" = .{
-            .url = "https://pkg.machengine.org/vulkan-zig-generated/836219ff4305889c4634e90c0d2e9038b8d56c37.tar.gz",
-            .hash = "12201e5f93d1c0398e2c999ab3d4ee9232b1efec20cb4dda7d0ffd2d4b50ca7089b9",
-        },
+        // .@"vulkan-zig-generated" = .{
+        //     .url = "https://pkg.machengine.org/vulkan-zig-generated/836219ff4305889c4634e90c0d2e9038b8d56c37.tar.gz",
+        //     .hash = "12201e5f93d1c0398e2c999ab3d4ee9232b1efec20cb4dda7d0ffd2d4b50ca7089b9",
+        // },
     },
     .paths = .{
         // This makes *all* files, recursively, included in this package. It is generally
